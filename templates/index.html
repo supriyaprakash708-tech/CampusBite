@@ -12,46 +12,51 @@
 
 <body>
 
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
 
+        <div class="logo">Campus<span>Bite.</span></div>
 
-<nav class="navbar">
-    <div class="logo">Campus<span>Bite.</span></div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/menu">Menu</a>
 
-    <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/menu">Menu</a>
+            {% if session.get('customer_name') %}
+                <a href="/cart">Cart</a>
+                <a href="/my-orders">My Orders</a>
+            {% endif %}
 
-        {% if session.get('customer_name') %}
-            <a href="/cart">Cart</a>
-            <a href="/my-orders">My Orders</a>
-        {% endif %}
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
 
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-    </div>
+        <div class="auth-links">
 
-    <div class="auth-links">
-        {% if session.get('customer_name') %}
-            <span>Welcome, {{ session.get('customer_name') }}</span>
-            <a href="/logout" class="login-button">Logout</a>
-        {% else %}
-            <a href="/login" class="login-button">Customer Login</a>
-            <a href="/register" class="register-button">Create Account</a>
-        {% endif %}
-    </div>
-</nav>
+            {% if session.get('customer_name') %}
+                <span>Welcome, {{ session.get('customer_name') }}</span>
+                <a href="/logout" class="login-button">Logout</a>
+            {% else %}
+                <a href="/login" class="login-button">Customer Login</a>
+                <a href="/register" class="register-button">Create Account</a>
+            {% endif %}
 
+            <a href="/admin-login" class="login-button">Admin Login</a>
 
+        </div>
 
+    </nav>
 
-
+    <!-- HERO SECTION -->
     <main class="hero">
 
         <div class="hero-content">
+
             <p class="eyebrow">YOUR CAMPUS FOOD COURT</p>
 
-            <h1>Good food.<br>
-                Less waiting.</h1>
+            <h1>
+                Good food.<br>
+                Less waiting.
+            </h1>
 
             <p class="description">
                 Order your favourite food before the break.
@@ -59,13 +64,14 @@
                 and collect it directly from the counter.
             </p>
 
-           <a href="/menu" class="primary-button">
+            <a href="/menu" class="primary-button">
                 Explore Menu →
             </a>
 
             <p class="small-note">
                 Easy ordering · Scheduled pickup · No delivery queues
             </p>
+
         </div>
 
         <div class="hero-image">
@@ -76,6 +82,7 @@
 
     </main>
 
+    <!-- FEATURES SECTION -->
     <section class="features" id="about">
 
         <div class="feature">
@@ -95,6 +102,7 @@
 
     </section>
 
+    <!-- FOOTER -->
     <footer id="contact">
         CampusBite · Smart Food Pre-Ordering System
     </footer>
