@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Food | CampusBite Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #faf8f2;
+            color: #28352e;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            background: #203b30;
+            color: white;
+            padding: 30px 20px;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 27px;
+            margin-bottom: 45px;
+        }
+
+        .logo span {
+            color: #b9d0ae;
+        }
+
+        .nav-label {
+            color: #a9b9ae;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            margin: 25px 12px 12px;
+            text-transform: uppercase;
+        }
+
+        .nav-link {
+            display: block;
+            color: #e2e9e3;
+            text-decoration: none;
+            padding: 13px 14px;
+            border-radius: 9px;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #365847;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            padding: 35px 45px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .topbar p {
+            color: #788179;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: #203b30;
+        }
+
+        .admin-name {
+            background: white;
+            border: 1px solid #e9e8df;
+            padding: 11px 17px;
+            border-radius: 25px;
+            font-size: 13px;
+        }
+
+        .form-card {
+            background: white;
+            border: 1px solid #e9e8df;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 750px;
+            box-shadow: 0 5px 20px rgba(32, 59, 48, 0.04);
+        }
+
+        .form-card h2 {
+            font-family: 'Playfair Display', serif;
+            color: #203b30;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            color: #788179;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #365044;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #e1e4dc;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+            color: #28352e;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #557b59;
+            box-shadow: 0 0 0 3px rgba(85, 123, 89, 0.10);
+        }
+
+        .current-image {
+            margin-top: 12px;
+        }
+
+        .current-image img {
+            width: 130px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #e9e8df;
+        }
+
+        .image-note {
+            color: #788179;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        .message {
+            background: #fcebea;
+            color: #a3443e;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .save-button {
+            border: none;
+            background: #203b30;
+            color: white;
+            padding: 13px 23px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background: #365847;
+        }
+
+        .cancel-button {
+            background: #f1f2ed;
+            color: #365044;
+            text-decoration: none;
+            padding: 13px 23px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 850px) {
+            body {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 18px;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .nav-label {
+                display: none;
+            }
+
+            .nav-link {
+                display: inline-block;
+                margin: 3px;
+                padding: 10px;
+            }
+
+            .main {
+                padding: 25px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">Campus<span>Bite</span></div>
+
+        <div class="nav-label">Main Menu</div>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="nav-link">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('admin_orders') }}" class="nav-link">
+            Manage Orders
+        </a>
+
+        <a href="{{ url_for('admin_foods') }}" class="nav-link active">
+            Manage Food
+        </a>
+
+        <div class="nav-label">Other</div>
+
+        <a href="{{ url_for('home') }}" class="nav-link">
+            Customer Website
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="nav-link">
+            Logout
+        </a>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div>
+                <p>ADMINISTRATION / FOOD MANAGEMENT</p>
+                <h1>Edit Food Item</h1>
+            </div>
+
+            <div class="admin-name">
+                Welcome, {{ admin_name }}
+            </div>
+        </header>
+
+        <section class="form-card">
+
+            <h2>Update Food Details</h2>
+            <p class="description">
+                Modify the food information and save your changes.
+            </p>
+
+            {% if message %}
+                <div class="message">{{ message }}</div>
+            {% endif %}
+
+            <form method="POST"
+                  action="{{ url_for('admin_edit_food', food_id=food['food_id']) }}"
+                  enctype="multipart/form-data">
+
+                <div class="form-group">
+                    <label for="name">Food Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value="{{ food['name'] }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+
+                    <select id="category" name="category" required>
+                        {% for category in ['Beverages', 'Snacks', 'Breakfast', 'Lunch', 'Fast Food', 'Other'] %}
+                            <option value="{{ category }}"
+                                {% if food['category'] == category %}selected{% endif %}>
+                                {{ category }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price (₹)</label>
+                    <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        value="{{ food['price'] }}"
+                        min="0.01"
+                        step="0.01"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Current Food Image</label>
+
+                    {% if food['image'] %}
+                        <div class="current-image">
+                            <img
+                                src="{{ url_for('static', filename='images/' ~ food['image']) }}"
+                                alt="{{ food['name'] }}"
+                            >
+                        </div>
+                    {% else %}
+                        <p class="image-note">No image uploaded yet.</p>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Replace Food Image (Optional)</label>
+                    <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        accept=".jpg,.jpeg,.png,.webp"
+                    >
+                    <p class="image-note">
+                        Leave empty to keep the current image.
+                    </p>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="save-button">
+                        Save Changes
+                    </button>
+
+                    <a href="{{ url_for('admin_foods') }}"
+                       class="cancel-button">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | CampusBite</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <style>
+        .order-progress {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 30px 10px;
+            gap: 8px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e7e7e1;
+            color: #777;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 9px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .progress-step.completed .progress-circle,
+        .progress-step.active .progress-circle {
+            background: #244d38;
+            color: white;
+        }
+
+        .progress-step p {
+            font-size: 11px;
+            color: #777;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .progress-step.completed p,
+        .progress-step.active p {
+            color: #244d38;
+        }
+
+        .order-progress::before {
+            content: "";
+            position: absolute;
+            height: 3px;
+            background: #e7e7e1;
+            top: 15px;
+            left: 12%;
+            right: 12%;
+            z-index: 0;
+        }
+
+        .order-progress.cancelled::before {
+            background: #e7e7e1;
+        }
+
+        .order-status.cancelled {
+            background: #fce8e6;
+            color: #b42318;
+        }
+
+        .order-status.completed {
+            background: #e2f2e7;
+            color: #24633d;
+        }
+
+        .order-status.preparing {
+            background: #fff0d6;
+            color: #946200;
+        }
+
+        .order-status.ready {
+            background: #e3efff;
+            color: #245b9b;
+        }
+
+        .order-status.paid {
+            background: #e8f3e9;
+            color: #356b43;
+        }
+
+        .order-progress-message {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin: -12px 0 20px;
+        }
+
+        @media (max-width: 480px) {
+            .progress-step p {
+                font-size: 9px;
+            }
+
+            .progress-circle {
+                width: 27px;
+                height: 27px;
+                font-size: 11px;
+            }
+
+            .order-progress::before {
+                top: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="orders-navbar">
+    <a href="{{ url_for('home') }}" class="orders-logo">Campus<span>Bite.</span></a>
+
+    <div class="orders-nav-links">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('menu') }}">Menu</a>
+        <a href="{{ url_for('view_cart') }}">Cart</a>
+        <a href="{{ url_for('my_orders') }}" class="active">My Orders</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<main class="orders-container">
+
+    <div class="orders-heading">
+        <p class="orders-eyebrow">YOUR CAMPUSBITE ACCOUNT</p>
+        <h1>My Orders</h1>
+        <p>Keep track of your food orders and pickup details.</p>
+    </div>
+
+    {% if orders %}
+
+    <div class="orders-list">
+
+        {% for order in orders %}
+
+        {% set status = order.order_status|lower|trim %}
+
+        {% set statuses = ['paid', 'preparing', 'ready', 'completed'] %}
+
+        <section class="order-card">
+
+            <div class="order-card-header">
+                <div>
+                    <span class="order-label">ORDER ID</span>
+                    <h3>#{{ order.order_id }}</h3>
+                </div>
+
+                <span class="order-status {{ status }}">
+                    {{ order.order_status }}
+                </span>
+            </div>
+
+            {% if status == 'cancelled' %}
+
+                <div class="order-progress-message">
+                    This order has been cancelled.
+                </div>
+
+            {% else %}
+
+                {% set current_step = statuses.index(status) if status in statuses else -1 %}
+
+                <div class="order-progress">
+
+                    {% for step in statuses %}
+
+                    <div class="progress-step
+                        {% if current_step >= loop.index0 %}completed{% endif %}
+                        {% if current_step == loop.index0 %}active{% endif %}">
+
+                        <div class="progress-circle">
+                            {% if current_step > loop.index0 %}
+                                ✓
+                            {% else %}
+                                {{ loop.index }}
+                            {% endif %}
+                        </div>
+
+                        <p>{{ step|title }}</p>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <p class="order-progress-message">
+                    {% if status == 'paid' %}
+                        Your order has been placed successfully.
+                    {% elif status == 'preparing' %}
+                        Your delicious food is being prepared.
+                    {% elif status == 'ready' %}
+                        Your order is ready! Please collect it.
+                    {% elif status == 'completed' %}
+                        Your order has been collected. Enjoy!
+                    {% else %}
+                        Your order status: {{ order.order_status }}
+                    {% endif %}
+                </p>
+
+            {% endif %}
+
+            <div class="order-details-grid">
+
+                <div>
+                    <span class="order-label">PICKUP DATE</span>
+                    <p>{{ order.pickup_date }}</p>
+                </div>
+
+                <div>
+                    <span class="order-label">PICKUP TIME</span>
+                    <p>{{ order.pickup_time }}</p>
+                </div>
+
+                <div>
+                    <span class="order-label">TOTAL AMOUNT</span>
+                    <p class="order-price">₹{{ "%.2f"|format(order.total) }}</p>
+                </div>
+
+                <div>
+                    <span class="order-label">PAYMENT STATUS</span>
+                    <p>{{ order.payment_status }}</p>
+                </div>
+
+            </div>
+
+            <div class="order-card-footer">
+                <span>Thank you for ordering with CampusBite!</span>
+                <a href="{{ url_for('order_confirmation', order_id=order.order_id) }}">
+                    View Details →
+                </a>
+            </div>
+
+        </section>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="orders-empty">
+        <div class="empty-order-icon">🛍️</div>
+        <h2>No orders yet!</h2>
+        <p>Your delicious campus meals will appear here after you place an order.</p>
+        <a href="{{ url_for('menu') }}" class="browse-menu-btn">Explore Menu</a>
+    </div>
+
+    {% endif %}
+
+</main>
+
+<footer class="orders-footer">
+    <p>© 2026 CampusBite. Made with care for campus life.</p>
+</footer>
+
+</body>
+</html>

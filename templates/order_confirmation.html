@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed | CampusBite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="confirmation-page">
+
+    <!-- NAVIGATION -->
+    <nav class="confirmation-navbar">
+    <a href="{{ url_for('home') }}" class="confirmation-logo">
+        Campus<span>Bite</span>
+    </a>
+
+    <div class="confirmation-nav-right">
+
+        {% if session.get('customer_name') %}
+            <span>Welcome, {{ session.get('customer_name') }}</span>
+
+            <a href="{{ url_for('my_orders') }}" class="confirmation-nav-link">
+                My Orders
+            </a>
+
+            <a href="{{ url_for('logout') }}" class="confirmation-nav-link">
+                Logout
+            </a>
+        {% endif %}
+
+        <a href="{{ url_for('menu') }}" class="confirmation-nav-link">
+            Explore Menu
+        </a>
+
+    </div>
+</nav>
+
+    <main class="confirmation-container">
+
+        <section class="confirmation-card">
+
+            <!-- SUCCESS SECTION -->
+            <div class="confirmation-success">
+
+                <div class="confirmation-success-icon">
+                    ✓
+                </div>
+
+                <p class="confirmation-eyebrow">
+                    ORDER SUCCESSFUL
+                </p>
+
+                <h1>Your Order is Confirmed!</h1>
+
+                <p class="confirmation-description">
+                    Thank you for choosing CampusBite.
+                    Your order has been successfully placed.
+                </p>
+
+                <div class="confirmation-order-id">
+                    Order ID: <strong>#{{ order.order_id }}</strong>
+                </div>
+
+            </div>
+
+            <div class="confirmation-divider"></div>
+
+            <!-- PICKUP DETAILS -->
+            <section class="confirmation-content">
+
+                <h2 class="confirmation-section-title">
+                    Pickup Information
+                </h2>
+
+                <div class="confirmation-pickup-grid">
+
+                    <div class="confirmation-detail-box">
+                        <span class="confirmation-detail-icon">▦</span>
+                        <div>
+                            <p class="confirmation-detail-label">
+                                Pickup Date
+                            </p>
+                            <h3 class="confirmation-detail-value">
+                                {{ order.pickup_date }}
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="confirmation-detail-box">
+                        <span class="confirmation-detail-icon">◷</span>
+                        <div>
+                            <p class="confirmation-detail-label">
+                                Pickup Time
+                            </p>
+                            <h3 class="confirmation-detail-value">
+                                {{ pickup_time }}
+                            </h3>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- PAYMENT STATUS -->
+            <section class="confirmation-payment-status">
+                <div>
+                    <p class="confirmation-detail-label">
+                        Payment Status
+                    </p>
+                    <h3 class="confirmation-paid-label">
+                        ✓ Simulated Payment Successful
+                    </h3>
+                </div>
+
+                <span class="confirmation-payment-badge">
+                    PAID
+                </span>
+            </section>
+
+            <!-- ORDER ITEMS -->
+            <section class="confirmation-content">
+
+                <h2 class="confirmation-section-title">
+                    Your Ordered Items
+                </h2>
+
+                <div class="confirmation-items-list">
+
+                    {% for item in items %}
+
+                        <div class="confirmation-item-row">
+
+                            <div class="confirmation-item-info">
+                                <h3>{{ item.name }}</h3>
+                                <p>Quantity: {{ item.quantity }}</p>
+                            </div>
+
+                            <strong>
+                                ₹{{ "%.2f"|format(item.unit_price * item.quantity) }}
+                            </strong>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <div class="confirmation-total-row">
+                    <span>Total Paid</span>
+                    <strong>
+                        ₹{{ "%.2f"|format(order.total) }}
+                    </strong>
+                </div>
+
+            </section>
+
+            <!-- PICKUP NOTE -->
+            <div class="confirmation-pickup-note">
+                <span>ⓘ</span>
+                <p>
+                    Please visit the CampusBite pickup counter on your
+                    selected date and time. Keep your order ID ready
+                    when collecting your food.
+                </p>
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="confirmation-buttons">
+
+                <a href="{{ url_for('menu') }}"
+                   class="confirmation-primary-button">
+                    Order More Food
+                    <span>→</span>
+                </a>
+
+                <a href="{{ url_for('home') }}"
+                   class="confirmation-secondary-button">
+                    Back to Home
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="confirmation-footer">
+        <p>© 2026 CampusBite. Fresh food, happy students.</p>
+    </footer>
+
+</body>
+</html>

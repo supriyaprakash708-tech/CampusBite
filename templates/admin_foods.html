@@ -1,0 +1,580 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Food | CampusBite Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #faf8f2;
+            color: #28352e;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 245px;
+            background: #203b30;
+            color: white;
+            padding: 30px 20px;
+            min-height: 100vh;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 27px;
+            margin-bottom: 45px;
+        }
+
+        .logo span {
+            color: #b9d0ae;
+        }
+
+        .nav-label {
+            color: #a9b9ae;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            margin: 25px 12px 12px;
+            text-transform: uppercase;
+        }
+
+        .nav-link {
+            display: block;
+            color: #e2e9e3;
+            text-decoration: none;
+            padding: 13px 14px;
+            border-radius: 9px;
+            margin-bottom: 7px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #365847;
+            color: white;
+        }
+
+        /* MAIN CONTENT */
+
+        .main {
+            flex: 1;
+            padding: 35px 45px;
+            min-width: 0;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+        }
+
+        .topbar p {
+            color: #788179;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: #203b30;
+        }
+
+        .admin-name {
+            background: white;
+            border: 1px solid #e9e8df;
+            padding: 11px 17px;
+            border-radius: 25px;
+            font-size: 13px;
+        }
+
+        /* CONTENT CARD */
+
+        .content-card {
+            background: white;
+            border: 1px solid #e9e8df;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(32, 59, 48, 0.04);
+        }
+
+        .card-heading {
+            margin-bottom: 22px;
+        }
+
+        .card-heading h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 23px;
+            color: #203b30;
+            margin-bottom: 6px;
+        }
+
+        .card-heading p {
+            color: #788179;
+            font-size: 13px;
+        }
+
+        /* ADD FOOD BUTTON */
+
+        .add-food-button {
+            display: inline-block;
+            background: #557b59;
+            color: white;
+            text-decoration: none;
+            padding: 11px 17px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 18px;
+            transition: 0.2s;
+        }
+
+        .add-food-button:hover {
+            background: #365847;
+            transform: translateY(-2px);
+        }
+
+        /* FOOD TABLE */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 780px;
+        }
+
+        th {
+            text-align: left;
+            background: #f5f6f0;
+            color: #647166;
+            padding: 14px 13px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 15px 13px;
+            border-bottom: 1px solid #eeeee8;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: #fdfdf9;
+        }
+
+        .food-image {
+            width: 55px;
+            height: 48px;
+            border-radius: 9px;
+            object-fit: cover;
+            background: #f1f1eb;
+        }
+
+        .food-name {
+            font-weight: 700;
+            color: #203b30;
+        }
+
+        .price {
+            font-weight: 700;
+            color: #365d42;
+        }
+
+        /* AVAILABILITY STATUS */
+
+        .status {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .available {
+            background: #e8efe5;
+            color: #365d42;
+        }
+
+        .unavailable {
+            background: #fcebea;
+            color: #a3443e;
+        }
+
+        /* AVAILABILITY TOGGLE BUTTON */
+
+        .toggle-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 125px;
+            padding: 9px 13px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.1px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .disable-button {
+            background: #fff5f3;
+            color: #a4473d;
+            border-color: #f1d6d1;
+        }
+
+        .disable-button:hover {
+            background: #a4473d;
+            color: #ffffff;
+            border-color: #a4473d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(164, 71, 61, 0.15);
+        }
+
+        .enable-button {
+            background: #edf4e9;
+            color: #365d42;
+            border-color: #d5e3ce;
+        }
+
+        .enable-button:hover {
+            background: #365d42;
+            color: #ffffff;
+            border-color: #365d42;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(54, 93, 66, 0.15);
+        }
+
+        .toggle-button:active {
+            transform: translateY(0);
+        }
+
+        .toggle-button:focus-visible {
+            outline: 3px solid #b9d0ae;
+            outline-offset: 3px;
+        }
+
+        /* EDIT BUTTON */
+
+        .edit-button {
+            display: inline-block;
+            background: #203b30;
+            color: white;
+            text-decoration: none;
+            padding: 9px 17px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .edit-button:hover {
+            background: #557b59;
+            transform: translateY(-2px);
+        }
+
+        /* EMPTY STATE */
+
+        .empty-state {
+            text-align: center;
+            padding: 45px 15px;
+            color: #788179;
+        }
+
+        .empty-state h3 {
+            color: #203b30;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 8px;
+        }
+
+        /* RESPONSIVE DESIGN */
+
+        @media (max-width: 850px) {
+
+            body {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                padding: 18px;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .nav-label {
+                display: none;
+            }
+
+            .nav-link {
+                display: inline-block;
+                margin: 3px;
+                padding: 10px;
+            }
+
+            .main {
+                padding: 25px 18px;
+            }
+
+            .content-card {
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">Campus<span>Bite</span></div>
+
+        <div class="nav-label">Main Menu</div>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="nav-link">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('admin_orders') }}" class="nav-link">
+            Manage Orders
+        </a>
+
+        <a href="{{ url_for('admin_foods') }}" class="nav-link active">
+            Manage Food
+        </a>
+
+        <div class="nav-label">Other</div>
+
+        <a href="{{ url_for('home') }}" class="nav-link">
+            Customer Website
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="nav-link">
+            Logout
+        </a>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div>
+                <p>ADMINISTRATION / FOOD MANAGEMENT</p>
+                <h1>Manage Food Items</h1>
+            </div>
+
+            <div class="admin-name">
+                Welcome, {{ admin_name }}
+            </div>
+
+        </header>
+
+        <section class="content-card">
+
+            <div class="card-heading">
+
+                <h2>Food Inventory</h2>
+
+                <p>
+                    View, edit and manage all food items in CampusBite.
+                </p>
+
+                <a href="{{ url_for('admin_add_food') }}"
+                   class="add-food-button">
+                    + Add New Food
+                </a>
+
+            </div>
+
+            {% if foods %}
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Food Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Availability</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for food in foods %}
+
+                        <tr>
+
+                            <!-- FOOD IMAGE -->
+
+                            <td>
+
+                                {% if food['image'] %}
+
+                                    <img
+                                        src="{{ url_for('static', filename='images/' ~ food['image']) }}"
+                                        alt="{{ food['name'] }}"
+                                        class="food-image"
+                                    >
+
+                                {% else %}
+
+                                    <div class="food-image"></div>
+
+                                {% endif %}
+
+                            </td>
+
+                            <!-- FOOD NAME -->
+
+                            <td class="food-name">
+                                {{ food['name'] }}
+                            </td>
+
+                            <!-- CATEGORY -->
+
+                            <td>
+                                {{ food['category'] }}
+                            </td>
+
+                            <!-- PRICE -->
+
+                            <td class="price">
+                                ₹{{ "%.2f"|format(food['price']) }}
+                            </td>
+
+                            <!-- AVAILABILITY -->
+
+                            <td>
+
+                                {% if food['available'] == 1 %}
+
+                                    <span class="status available">
+                                        Available
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status unavailable">
+                                        Unavailable
+                                    </span>
+
+                                {% endif %}
+
+                                <form
+                                    action="{{ url_for('admin_toggle_food', food_id=food['food_id']) }}"
+                                    method="POST"
+                                    style="margin-top: 10px;"
+                                >
+
+                                    {% if food['available'] == 1 %}
+
+                                        <button
+                                            type="submit"
+                                            class="toggle-button disable-button"
+                                        >
+                                            Mark Unavailable
+                                        </button>
+
+                                    {% else %}
+
+                                        <button
+                                            type="submit"
+                                            class="toggle-button enable-button"
+                                        >
+                                            Mark Available
+                                        </button>
+
+                                    {% endif %}
+
+                                </form>
+
+                            </td>
+
+                            <!-- EDIT ACTION -->
+
+                            <td>
+
+                                <a
+                                    href="{{ url_for('admin_edit_food', food_id=food['food_id']) }}"
+                                    class="edit-button"
+                                >
+                                    Edit
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <h3>No Food Items Found</h3>
+
+                    <p>
+                        There are currently no food items in your inventory.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</body>
+</html>

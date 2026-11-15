@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Login | CampusBite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+
+    <div class="auth-container">
+        <div class="auth-card">
+
+            <a href="{{ url_for('home') }}" class="auth-logo">
+                Campus<span>Bite.</span>
+            </a>
+
+            <p class="auth-eyebrow">WELCOME BACK</p>
+            <h1>Login to your account</h1>
+            <p class="auth-description">
+                Sign in to order your favourite food and manage your pickups.
+            </p>
+
+            {% if message %}
+                <div class="message {{ message_type }}">
+                    {{ message }}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('login') }}">
+
+                <div class="form-group">
+                    <label for="contact">Email Address or Phone Number</label>
+                    <input
+                        type="text"
+                        id="contact"
+                        name="contact"
+                        placeholder="Enter your email or phone number"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required>
+                </div>
+
+                <button type="submit" class="auth-button">
+                    Login to CampusBite
+                </button>
+
+            </form>
+
+            <p class="auth-link">
+                Don't have an account?
+                <a href="{{ url_for('register') }}">Create an account</a>
+            </p>
+
+            <a href="{{ url_for('home') }}" class="back-link">
+                ← Back to Home
+            </a>
+
+        </div>
+    </div>
+
+</body>
+</html>

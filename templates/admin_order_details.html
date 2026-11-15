@@ -1,0 +1,358 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order Details | CampusBite</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            background: #faf8f2;
+            color: #28352e;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .page {
+            max-width: 1150px;
+            margin: auto;
+            padding: 35px 25px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            color: #203b30;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin: 0 0 8px;
+        }
+
+        .subtitle {
+            color: #788179;
+            margin: 0;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #557b59;
+            font-weight: 700;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e9e8df;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(32, 59, 48, 0.04);
+        }
+
+        .card h2 {
+            font-size: 21px;
+            margin: 0 0 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0efe9;
+            font-size: 14px;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #788179;
+        }
+
+        .detail-value {
+            color: #203b30;
+            font-weight: 600;
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            background: #e8efe5;
+            color: #557b59;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .items-card {
+            background: white;
+            border: 1px solid #e9e8df;
+            border-radius: 15px;
+            padding: 25px;
+            overflow: hidden;
+        }
+
+        .items-card h2 {
+            margin: 0 0 22px;
+            font-size: 23px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 550px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: #f5f6f0;
+            color: #657268;
+            padding: 15px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 16px 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 40px;
+            padding: 22px 15px 5px;
+            font-size: 19px;
+            font-weight: 700;
+            color: #203b30;
+        }
+
+        .empty-items {
+            text-align: center;
+            padding: 30px;
+            color: #788179;
+        }
+
+        @media (max-width: 650px) {
+            .page {
+                padding: 22px 14px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card, .items-card {
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .detail-row {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- HEADER -->
+    <div class="topbar">
+        <div>
+            <h1>Order #{{ order.order_id }}</h1>
+            <p class="subtitle">Complete customer order information</p>
+        </div>
+
+        <a href="{{ url_for('admin_orders') }}" class="back-link">
+            ← Back to Orders
+        </a>
+    </div>
+
+    <!-- CUSTOMER AND ORDER INFORMATION -->
+    <div class="details-grid">
+
+        <section class="card">
+            <h2>Customer Information</h2>
+
+            <div class="detail-row">
+                <span class="detail-label">Customer Name</span>
+                <span class="detail-value">{{ order.customer_name }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Email</span>
+                <span class="detail-value">{{ order.customer_email or 'Not available' }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Phone</span>
+                <span class="detail-value">{{ order.customer_phone or 'Not available' }}</span>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Order Information</h2>
+
+            <div class="detail-row">
+                <span class="detail-label">Order ID</span>
+                <span class="detail-value">#{{ order.order_id }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Pickup Date</span>
+                <span class="detail-value">{{ order.pickup_date or 'Not set' }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Pickup Time</span>
+                <span class="detail-value">{{ order.pickup_time or 'Not set' }}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Payment Status</span>
+                <span class="detail-value">
+                    <span class="status">{{ order.payment_status|capitalize }}</span>
+                </span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Order Status</span>
+                <span class="detail-value">
+                    <span class="status">{{ order.order_status }}</span>
+                </span>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ORDER STATUS HISTORY -->
+<div class="details-card">
+    <h2>Order Status History</h2>
+
+    {% if history %}
+        <div class="status-timeline">
+            {% for entry in history %}
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+
+                    <div class="timeline-content">
+                        <h3>{{ entry.status }}</h3>
+
+                        <p>
+                            Updated on:
+                            {{ entry.updated_at }}
+                        </p>
+
+                        {% if entry.updated_by %}
+                            <p>Updated by Admin #{{ entry.updated_by }}</p>
+                        {% else %}
+                            <p>Initial order status</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No status history available.</p>
+    {% endif %}
+</div>
+
+    <!-- ORDERED ITEMS -->
+    <section class="items-card">
+
+        <h2>Ordered Food Items</h2>
+
+        {% if items %}
+
+        <div class="table-wrapper">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Food Item</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in items %}
+
+                    <tr>
+                        <td><strong>{{ item.food_name }}</strong></td>
+
+                        <td>{{ item.category }}</td>
+
+                        <td>{{ item.quantity }}</td>
+
+                        <td>₹{{ "%.2f"|format(item.unit_price) }}</td>
+
+                        <td>₹{{ "%.2f"|format(item.subtotal) }}</td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="total-row">
+            <span>Total Amount</span>
+            <span>₹{{ "%.2f"|format(order.total) }}</span>
+        </div>
+
+        {% else %}
+
+        <div class="empty-items">
+            No food items found for this order.
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Food | CampusBite Admin</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #faf8f2;
+            color: #28352e;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 245px;
+            background: #203b30;
+            color: white;
+            padding: 30px 20px;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 27px;
+            margin-bottom: 45px;
+        }
+
+        .logo span {
+            color: #b9d0ae;
+        }
+
+        .nav-label {
+            color: #a9b9ae;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            margin: 25px 12px 12px;
+        }
+
+        .nav-link {
+            display: block;
+            color: #e2e9e3;
+            text-decoration: none;
+            padding: 13px 14px;
+            border-radius: 9px;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #365847;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            padding: 35px 45px;
+            min-width: 0;
+        }
+
+        .topbar {
+            margin-bottom: 30px;
+        }
+
+        .topbar p {
+            color: #788179;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: #203b30;
+        }
+
+        .form-card {
+            max-width: 750px;
+            background: white;
+            border: 1px solid #e9e8df;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 5px 20px rgba(32, 59, 48, 0.04);
+        }
+
+        .form-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 23px;
+            color: #203b30;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            color: #788179;
+            font-size: 13px;
+            margin-bottom: 27px;
+        }
+
+        .form-group {
+            margin-bottom: 21px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 9px;
+            color: #35463a;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #e1e5dc;
+            border-radius: 9px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            color: #28352e;
+            background: #fff;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #557b59;
+            box-shadow: 0 0 0 3px rgba(85, 123, 89, 0.1);
+        }
+
+        input[type="file"] {
+            background: #f8f9f5;
+        }
+
+        .hint {
+            color: #788179;
+            font-size: 11px;
+            margin-top: 7px;
+        }
+
+        .message {
+            background: #fcebea;
+            color: #a3443e;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 9px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #365d42;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #203b30;
+        }
+
+        .btn-secondary {
+            background: #eef1eb;
+            color: #365d42;
+        }
+
+        @media (max-width: 850px) {
+            body {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 18px;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .nav-label {
+                display: none;
+            }
+
+            .nav-link {
+                display: inline-block;
+                margin: 3px;
+                padding: 10px;
+            }
+
+            .main {
+                padding: 25px 18px;
+            }
+
+            .form-card {
+                padding: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">Campus<span>Bite</span></div>
+
+        <div class="nav-label">Main Menu</div>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="nav-link">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('admin_orders') }}" class="nav-link">
+            Manage Orders
+        </a>
+
+        <a href="{{ url_for('admin_foods') }}" class="nav-link active">
+            Manage Food
+        </a>
+
+        <div class="nav-label">Other</div>
+
+        <a href="{{ url_for('home') }}" class="nav-link">
+            Customer Website
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="nav-link">
+            Logout
+        </a>
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <p>ADMINISTRATION / FOOD MANAGEMENT / ADD FOOD</p>
+            <h1>Add Food Item</h1>
+        </header>
+
+        <section class="form-card">
+
+            <h2>Food Details</h2>
+            <p class="description">
+                Enter the details below to add a new item to your menu.
+            </p>
+
+            {% if message %}
+            <div class="message">
+                {{ message }}
+            </div>
+            {% endif %}
+
+            <form method="POST"
+                  action="{{ url_for('admin_add_food') }}"
+                  enctype="multipart/form-data">
+
+                <div class="form-group">
+                    <label for="name">Food Name *</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Example: Veg Burger"
+                        maxlength="100"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Beverages">Beverages</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Lunch">Lunch</option>
+                        <option value="Fast Food">Fast Food</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price (₹) *</label>
+                    <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        placeholder="Enter price"
+                        min="0.01"
+                        step="0.01"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="image">Food Image</label>
+                    <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        accept=".jpg,.jpeg,.png,.webp"
+                    >
+                    <p class="hint">
+                        Accepted formats: JPG, JPEG, PNG and WEBP.
+                    </p>
+                </div>
+
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">
+                        Add Food Item
+                    </button>
+
+                    <a href="{{ url_for('admin_foods') }}"
+                       class="btn btn-secondary">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

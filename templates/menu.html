@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusBite | Menu</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="/" class="logo">Campus<span>Bite.</span></a>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/menu">Menu</a>
+            <a href="/cart">My Cart</a>
+
+            {% if session.get('customer_name') %}
+                <a href="/my-orders">My Orders</a>
+            {% endif %}
+        </div>
+
+        <div class="auth-links">
+            {% if session.get('customer_name') %}
+                <span>Welcome, {{ session.get('customer_name') }}</span>
+                <a href="/logout" class="login-button">Logout</a>
+            {% else %}
+                <a href="/login" class="login-button">Customer Login</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Menu Heading -->
+    <section class="menu-heading">
+        <h1>Our Food Menu</h1>
+        <p>Choose your favourite food and order before your break.</p>
+    </section>
+
+    <!-- Food Items -->
+    <section class="menu-container">
+
+        {% for food in foods %}
+        <div class="food-card">
+
+            <!-- Food Image -->
+            <div class="food-image">
+                {% if food.image %}
+                    <img
+                        src="{{ url_for('static', filename='images/' + food.image) }}"
+                        alt="{{ food.name }}"
+                        onerror="this.style.display='none';"
+                    >
+                {% else %}
+                    <div class="no-food-image">
+                        <span>🍽️</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Food Details -->
+            <div class="food-card-content">
+
+                <span class="food-category">
+                    {{ food.category }}
+                </span>
+
+                <h3>{{ food.name }}</h3>
+
+                <p class="food-price">
+                    ₹{{ "%.2f"|format(food.price) }}
+                </p>
+
+                {% if food.available %}
+                    <span class="available">Available</span>
+
+                    <form
+                        action="{{ url_for('add_to_cart', food_id=food.food_id) }}"
+                        method="POST">
+
+                        <button type="submit" class="add-cart-button">
+                            + Add to Cart
+                        </button>
+
+                    </form>
+
+                {% else %}
+                    <span class="unavailable">
+                        Currently unavailable
+                    </span>
+                {% endif %}
+
+            </div>
+        </div>
+
+        {% else %}
+            <p>No food items are available at the moment.</p>
+        {% endfor %}
+
+    </section>
+
+</body>
+</html>

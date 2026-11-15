@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | CampusBite</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="checkout-page">
+
+<nav class="checkout-navbar">
+    <a href="{{ url_for('home') }}" class="checkout-logo">
+        Campus<span>Bite</span>
+    </a>
+
+    <div class="checkout-nav-right">
+
+        {% if session.get('customer_name') %}
+            <span>Welcome, {{ session.get('customer_name') }}</span>
+
+            <a href="{{ url_for('my_orders') }}" class="checkout-back">
+                My Orders
+            </a>
+
+            <a href="{{ url_for('logout') }}" class="checkout-back">
+                Logout
+            </a>
+        {% endif %}
+
+        <a href="{{ url_for('view_cart') }}" class="checkout-back">
+            ← Back to Cart
+        </a>
+
+    </div>
+</nav>
+
+<main class="checkout-container">
+
+    <!-- PAGE HEADING -->
+    <section class="checkout-heading">
+        <p class="checkout-eyebrow">ALMOST THERE!</p>
+        <h1>Complete Your Order</h1>
+        <p>Choose your preferred pickup date and time.</p>
+    </section>
+
+    <!-- ERROR MESSAGE -->
+{% if checkout_message %}
+    <div class="checkout-alert">
+        {{ checkout_message }}
+    </div>
+{% endif %}
+
+    <div class="checkout-layout">
+
+        <!-- LEFT: PICKUP DETAILS -->
+        <section class="checkout-main-card">
+
+            <div class="checkout-section-heading">
+                <span class="checkout-step">01</span>
+                <div>
+                    <h2>Pickup Details</h2>
+                    <p>Select when you would like to collect your order.</p>
+                </div>
+            </div>
+
+            <!-- PICKUP DATE FORM -->
+            <form method="GET"
+                  action="{{ url_for('checkout') }}"
+                  class="pickup-date-form">
+
+                <div class="checkout-form-group">
+                    <label for="pickup_date">Select Pickup Date</label>
+
+                    <input
+                        type="date"
+                        id="pickup_date"
+                        name="pickup_date"
+                        value="{{ pickup_date }}"
+                        min="{{ today }}"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="date-submit-button">
+                    Check Availability
+                </button>
+
+            </form>
+
+            <div class="checkout-divider"></div>
+
+            <!-- PICKUP SLOT SELECTION -->
+            <div class="checkout-section-heading">
+                <span class="checkout-step">02</span>
+                <div>
+                    <h2>Choose Pickup Time</h2>
+                    <p>Select one available time slot.</p>
+                </div>
+            </div>
+
+            <form method="POST"
+                  action="{{ url_for('place_order') }}"
+                  class="checkout-order-form">
+
+                <input
+                    type="hidden"
+                    name="pickup_date"
+                    value="{{ pickup_date }}"
+                >
+
+                <div class="pickup-slots">
+
+                    {% for slot in slots %}
+
+                        <label class="pickup-slot
+                            {% if slot.remaining <= 0 or slot.time_passed %}
+                                slot-unavailable
+                            {% endif %}">
+
+                            <input
+                                type="radio"
+                                name="slot_id"
+                                value="{{ slot.slot_id }}"
+                                {% if slot.remaining <= 0 or slot.time_passed %}
+                                    disabled
+                                {% endif %}
+                                required
+                            >
+
+                            <span class="slot-radio"></span>
+
+                            <span class="slot-information">
+
+                                <strong>{{ slot.display_time }}</strong>
+
+                                {% if slot.time_passed %}
+                                    <small class="slot-full">
+                                        Time Passed
+                                    </small>
+
+                                {% elif slot.remaining > 0 %}
+                                    <small>
+                                        {{ slot.remaining }} slot(s) available
+                                    </small>
+
+                                {% else %}
+                                    <small class="slot-full">
+                                        Fully Booked
+                                    </small>
+                                {% endif %}
+
+                            </span>
+
+                            <span class="slot-status">
+
+                                {% if slot.time_passed %}
+                                    Time Passed
+
+                                {% elif slot.remaining > 0 %}
+                                    Available
+
+                                {% else %}
+                                    Fully Booked
+                                {% endif %}
+
+                            </span>
+
+                        </label>
+
+                    {% else %}
+
+                        <div class="checkout-empty-slots">
+                            <p>No pickup slots are available.</p>
+                            <small>Please try another date.</small>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <div class="checkout-pickup-note">
+                    <span class="note-icon">ⓘ</span>
+                    <p>
+                        Please arrive at the selected pickup time.
+                        Your order will be prepared for collection.
+                    </p>
+                </div>
+
+                <!-- CONFIRM ORDER BUTTON -->
+                <button
+                    type="submit"
+                    class="checkout-primary-button"
+                    {% if not slots
+                        or not slots
+                        |selectattr('remaining', 'gt', 0)
+                        |selectattr('time_passed', 'equalto', false)
+                        |list
+                    %}
+                        disabled
+                    {% endif %}
+                >
+                    Confirm Order &amp; Continue
+                    <span>→</span>
+                </button>
+
+                <p class="checkout-secure-note">
+                    Your order will be confirmed after successful
+                    simulated payment.
+                </p>
+
+            </form>
+
+        </section>
+
+        <!-- RIGHT: ORDER SUMMARY -->
+        <aside class="checkout-summary-card">
+
+            <div class="checkout-summary-heading">
+                <div>
+                    <p class="checkout-eyebrow">YOUR SELECTION</p>
+                    <h2>Order Summary</h2>
+                </div>
+
+                <span class="checkout-item-count">
+                    {{ cart_items|length }} item(s)
+                </span>
+            </div>
+
+            <div class="checkout-summary-items">
+
+                {% for item in cart_items %}
+
+                    <div class="checkout-summary-item">
+
+                        <div class="checkout-item-info">
+                            <h3>{{ item.name }}</h3>
+                            <p>Quantity: {{ item.quantity }}</p>
+                        </div>
+
+                        <strong>
+                            ₹{{ "%.2f"|format(item.subtotal) }}
+                        </strong>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+            <div class="checkout-summary-total">
+                <span>Total Amount</span>
+                <strong>₹{{ "%.2f"|format(total) }}</strong>
+            </div>
+
+            <div class="checkout-payment-note">
+                <span>ⓘ</span>
+                <p>
+                    This project uses simulated payment.
+                    No actual money will be deducted.
+                </p>
+            </div>
+
+            <a href="{{ url_for('view_cart') }}"
+               class="checkout-edit-link">
+                ← Edit Your Cart
+            </a>
+
+        </aside>
+
+    </div>
+
+</main>
+
+<footer class="checkout-footer">
+    <p>© 2026 CampusBite. Fresh food, happy customers.</p>
+</footer>
+
+</body>
+</html>
